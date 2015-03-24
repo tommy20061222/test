@@ -17,6 +17,7 @@
 
 	if ($handle) {
 	    while (($line = fgets($handle)) !== false) {
+	    	$line = rtrim($line, "\n");
 	    	$tmp_line = strtolower($line);  // avoid Uppsercase issue
 
 	    	$decoded_line = json_decode($tmp_line,true);
@@ -103,7 +104,8 @@
 
 				 	}
 				 	//print_r($sub_elem);
-				 	file_put_contents($myFile, print_r($sub_elem, true),FILE_APPEND);
+				 	file_put_contents($myFile, json_encode($sub_elem),FILE_APPEND);
+				 	file_put_contents($myFile, "\n",FILE_APPEND);
 				 }
 				 fclose($product_handle);
 			}else{
