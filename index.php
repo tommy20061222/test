@@ -78,7 +78,9 @@
 				 		// take away special character
 						$model = str_replace($be_replaced, $replaced, $tmp_decode["model"]);
 						$family = isset($tmp_decode["family"]) ? str_replace($be_replaced, $replaced, $tmp_decode["family"]) : null;
-				 		$sub_elem = ["product_name"=>$real_str["product_name"],"listings"=>[]];
+				 		//$sub_elem = ["product_name"=>$real_str["product_name"],"listings"=>[]];
+				 		file_put_contents($myFile, "{\"product_name\":".$real_str["product_name"].",\"listing\":[",FILE_APPEND);	
+				 		$flag = true;
 				 		for($idx=0; $idx < sizeof($tmpList);$idx++){
 				 			$candidate= $tmpList[$idx];
 				 			$candidate_model = str_replace($be_replaced, $replaced, $candidate["model"]);
@@ -89,35 +91,37 @@
 				 				if(strpos($candidate_model, $model) !== false){
 				 					// push the chld to the listings
 				 					for($j=0; $j < sizeof($candidate_child);$j++){
-				 						array_push($sub_elem["listings"],$candidate_child[$j]);
+				 						$flag = false;
+				 						file_put_contents($myFile, print_r($candidate_child[$j],true).",",FILE_APPEND);
 				 					}
 				 				}
 				 			}else{
 				 				// if there is family, then
 				 				if(strpos($candidate_family, $family) !== false && strpos($candidate_model, $model) !== false ){
 				 					for($j=0; $j < sizeof($candidate_child);$j++){
-				 						array_push($sub_elem["listings"],$candidate_child[$j]);
+				 						$flag = false;
+				 						//array_push($sub_elem["listings"],$candidate_child[$j]);
+				 						file_put_contents($myFile, print_r($candidate_child[$j],true).",",FILE_APPEND);
 				 					}	
 				 				}
 				 			}
 				 		}
-
 				 	}
-				 	//print_r($sub_elem);
-				 	file_put_contents($myFile, json_encode($sub_elem),FILE_APPEND);
-				 	file_put_contents($myFile, "\n",FILE_APPEND);
+				 	if(!$flag){
+				   		$stat = fstat($fh);
+						ftruncate($fh, $stat['size']-1);
+					}
+				 	file_put_contents($myFile, "]}\n",FILE_APPEND);
 				 }
 				 fclose($product_handle);
 			}else{
 				die("Please supply file named products.txt");
 			}
-			
 		}
 	} else {
 	    // error opening the file.
 	    die("Please supply file named listings.txt");
 	}
-
 	fclose($fh);
 	echo "File is successfully generated, it is under output output directory";
 	
