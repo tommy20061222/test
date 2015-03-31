@@ -79,7 +79,7 @@
 						$model = str_replace($be_replaced, $replaced, $tmp_decode["model"]);
 						$family = isset($tmp_decode["family"]) ? str_replace($be_replaced, $replaced, $tmp_decode["family"]) : null;
 				 		//$sub_elem = ["product_name"=>$real_str["product_name"],"listings"=>[]];
-				 		file_put_contents($myFile, "{\"product_name\":".$real_str["product_name"].",\"listing\":[",FILE_APPEND);	
+				 		file_put_contents($myFile, "{\"product_name\":\"".$real_str["product_name"]."\",\"listing\":[",FILE_APPEND);	
 				 		$flag = true;
 				 		for($idx=0; $idx < sizeof($tmpList);$idx++){
 				 			$candidate= $tmpList[$idx];
